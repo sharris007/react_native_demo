@@ -1,34 +1,29 @@
-import { useMemo } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CHART_WIDTH = SCREEN_WIDTH - 32;
 const CHART_HEIGHT = 160;
 const PADDING = { top: 10, right: 10, bottom: 24, left: 28 };
-const PLOT_WIDTH = CHART_WIDTH - PADDING.left - PADDING.right;
-const PLOT_HEIGHT = CHART_HEIGHT - PADDING.top - PADDING.bottom;
 
 // Dummy data: S M T W T F S
 const LINE1 = [25, 35, 30, 45, 50, 42, 55]; // pink
 const LINE2 = [18, 25, 22, 30, 28, 35, 38]; // black
 
-function scaleY(val, min = 15, max = 60) {
-  const p = (val - min) / (max - min);
-  return PLOT_HEIGHT * (1 - p);
-}
-
-function scaleX(i, total = 7) {
-  return (PLOT_WIDTH * (i + 0.5)) / total;
-}
-
 export default function RevenueChart() {
-  const path1 = useMemo(() => {
-    return LINE1.map((y, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(y)}`).join(' ');
-  }, []);
-  const path2 = useMemo(() => {
-    return LINE2.map((y, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(y)}`).join(' ');
-  }, []);
+  const { width: windowWidth } = useWindowDimensions();
+  const plotWidth = Math.max(windowWidth - 70, 180);
+  const plotHeight = CHART_HEIGHT - PADDING.top - PADDING.bottom;
+
+  const scaleY = (val, min = 15, max = 60) => {
+    const p = (val - min) / (max - min);
+    return plotHeight * (1 - p);
+  };
+
+  const scaleX = (i, total = 7) => {
+    return (plotWidth * (i + 0.5)) / total;
+  };
+
+  const path1 = LINE1.map((y, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(y)}`).join(' ');
+  const path2 = LINE2.map((y, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(y)}`).join(' ');
 
   const yLabels = [60, 50, 40, 30, 20, 15];
   const xLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -43,13 +38,13 @@ export default function RevenueChart() {
         ))}
       </View>
       <View style={styles.chartArea}>
-        <Svg width={PLOT_WIDTH} height={PLOT_HEIGHT}>
+        <Svg width={plotWidth} height={plotHeight}>
           {yLabels.slice(1, -1).map((y) => (
             <Line
               key={y}
               x1={0}
               y1={scaleY(y)}
-              x2={PLOT_WIDTH}
+              x2={plotWidth}
               y2={scaleY(y)}
               stroke="#e8e8e8"
               strokeWidth={1}
@@ -64,7 +59,7 @@ export default function RevenueChart() {
             <Circle key={`p2-${i}`} cx={scaleX(i)} cy={scaleY(y)} r={3} fill="#212121" />
           ))}
         </Svg>
-        <View style={styles.xAxis}>
+        <View style={[styles.xAxis, { paddingHorizontal: (plotWidth / 7) * 0.3 }]}>
           {xLabels.map((l, i) => (
             <Text key={i} style={styles.xLabel}>
               {l}
@@ -96,7 +91,6 @@ const styles = StyleSheet.create({
   xAxis: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: (PLOT_WIDTH / 7) * 0.3,
     marginTop: 4,
   },
   xLabel: {
