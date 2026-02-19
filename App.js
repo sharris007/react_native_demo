@@ -1,8 +1,10 @@
+import { useEffect, useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 import PostsScreen from './src/screens/PostsScreen';
 import PostDetailScreen from './src/screens/PostDetailScreen';
@@ -125,7 +127,77 @@ function TabIcon({ label, focused }) {
   );
 }
 
+function BearsLogo({ size = 132 }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 140 160">
+      <Path
+        d="M112 24 A66 66 0 1 0 112 136"
+        fill="none"
+        stroke="#0B162A"
+        strokeWidth={36}
+        strokeLinecap="round"
+      />
+      <Path
+        d="M112 24 A66 66 0 1 0 112 136"
+        fill="none"
+        stroke="#C83803"
+        strokeWidth={26}
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
 export default function App() {
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const logoRotation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    let isMounted = true;
+    const rotationSequence = Animated.sequence([
+      Animated.timing(logoRotation, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(logoRotation, {
+        toValue: 0,
+        duration: 900,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]);
+
+    rotationSequence.start(({ finished }) => {
+      if (finished && isMounted) {
+        setIsInitialLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      rotationSequence.stop();
+    };
+  }, [logoRotation]);
+
+  const spin = logoRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  if (isInitialLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <StatusBar style="dark" />
+        <Animated.View style={[styles.logoWrapper, { transform: [{ rotate: spin }] }]}>
+          <BearsLogo />
+        </Animated.View>
+        <Text style={styles.loadingText}>Loading app...</Text>
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <StatusBar style="light" />
@@ -212,5 +284,20 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: 14,
     fontWeight: '700',
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+  },
+  logoWrapper: {
+    marginBottom: 20,
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0B162A',
   },
 });
