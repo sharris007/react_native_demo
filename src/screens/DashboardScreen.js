@@ -6,11 +6,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import FerrariSpeedometerGauge from '../components/FerrariSpeedometerGauge';
 import MetricCard from '../components/MetricCard';
 import RevenueChart from '../components/RevenueChart';
+import SpeedometerGauge from '../components/SpeedometerGauge';
 
 const COLORS = {
   dark: '#1a1a1a',
@@ -34,6 +37,8 @@ const PERIODS = ['Monthly', 'Weekly', 'Today'];
 export default function DashboardScreen() {
   const [period, setPeriod] = useState('Weekly');
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const gaugeSize = Math.max(118, Math.min(160, (width - 32 - 20 - 12) / 2));
 
   return (
     <ScrollView
@@ -89,6 +94,27 @@ export default function DashboardScreen() {
             dark={METRICS[3].dark}
             fillColor={METRICS[3].fill}
           />
+        </View>
+      </View>
+
+      <View style={styles.speedometerSection}>
+        <Text style={styles.speedometerTitle}>Speedometers</Text>
+        <View style={styles.speedometerRow}>
+          <View style={[styles.gaugeSlot, styles.leftGaugeSlot]}>
+            <SpeedometerGauge
+              value={72}
+              min={0}
+              max={100}
+              size={gaugeSize}
+              unit=""
+              label="Classic"
+              accentColor="#C9A227"
+              backgroundColor="#0d2037"
+            />
+          </View>
+          <View style={[styles.gaugeSlot, styles.rightGaugeSlot]}>
+            <FerrariSpeedometerGauge value={146} min={0} max={200} size={gaugeSize} label="Ferrari" />
+          </View>
         </View>
       </View>
 
@@ -161,6 +187,43 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  speedometerSection: {
+    marginTop: 24,
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  speedometerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#212121',
+    marginBottom: 8,
+  },
+  speedometerRow: {
+    flexDirection: 'row',
+  },
+  gaugeSlot: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  leftGaugeSlot: {
+    marginRight: 6,
+  },
+  rightGaugeSlot: {
+    marginLeft: 6,
   },
   revenueSection: {
     marginTop: 24,
