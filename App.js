@@ -206,6 +206,7 @@ export default function App() {
           name="CIM400"
           component={Cim400Screen}
           options={{
+            tabBarLabel: 'cim400.com',
             tabBarIcon: ({ focused }) => <TabIcon label="CIM400" focused={focused} />,
           }}
         />
