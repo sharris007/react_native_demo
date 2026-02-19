@@ -32,10 +32,10 @@ export default function SpeedometerGauge({
   const progress = (displayValue - min) / (max - min || 1);
   const angle = START_ANGLE + progress * (END_ANGLE - START_ANGLE);
 
-  const scale = size / 200;
   const cx = 100;
   const cy = 100;
-  const gradId = `g${String(label || 'x').replace(/\s/g, '')}`;
+  const idSource = String(label || 'x').replace(/[^a-zA-Z0-9_-]/g, '');
+  const gradId = `g${idSource || 'x'}`;
 
   return (
     <View style={[styles.container, { width: size, height: size + 44 }]}>

@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MetricCard from '../components/MetricCard';
 import RevenueChart from '../components/RevenueChart';
+import SpeedometerGauge from '../components/SpeedometerGauge';
 
 const COLORS = {
   dark: '#1a1a1a',
@@ -30,10 +31,16 @@ const METRICS = [
 ];
 
 const PERIODS = ['Monthly', 'Weekly', 'Today'];
+const SPEED_BY_PERIOD = {
+  Monthly: 82,
+  Weekly: 68,
+  Today: 54,
+};
 
 export default function DashboardScreen() {
   const [period, setPeriod] = useState('Weekly');
   const insets = useSafeAreaInsets();
+  const speedValue = SPEED_BY_PERIOD[period] ?? 0;
 
   return (
     <ScrollView
@@ -88,6 +95,26 @@ export default function DashboardScreen() {
             maxLabel={METRICS[3].maxLabel}
             dark={METRICS[3].dark}
             fillColor={METRICS[3].fill}
+          />
+        </View>
+      </View>
+
+      {/* Speedometer section */}
+      <View style={styles.speedSection}>
+        <View style={styles.speedHeader}>
+          <Text style={styles.speedTitle}>Operational Speed</Text>
+          <Text style={styles.speedPeriod}>{period}</Text>
+        </View>
+        <View style={styles.speedCard}>
+          <SpeedometerGauge
+            value={speedValue}
+            min={0}
+            max={100}
+            size={190}
+            unit="%"
+            label="TARGET: 100%"
+            accentColor={COLORS.blue}
+            backgroundColor={COLORS.dark}
           />
         </View>
       </View>
@@ -161,6 +188,44 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  speedSection: {
+    marginTop: 16,
+  },
+  speedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  speedTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#212121',
+  },
+  speedPeriod: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#757575',
+  },
+  speedCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   revenueSection: {
     marginTop: 24,
