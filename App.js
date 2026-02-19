@@ -14,6 +14,7 @@ import ServerItemDetailScreen from './src/screens/ServerItemDetailScreen';
 import SavedScreen from './src/screens/SavedScreen';
 import SavedDetailScreen from './src/screens/SavedDetailScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
+import Cim400Screen from './src/screens/Cim400Screen';
 
 const Tab = createBottomTabNavigator();
 const PostsStack = createNativeStackNavigator();
@@ -114,7 +115,7 @@ function SavedStackNavigator() {
 }
 
 function TabIcon({ label, focused }) {
-  const colors = { Posts: '#2196F3', Users: '#4CAF50', Todos: '#FF9800', Server: '#9C27B0', Saved: '#5E35B1', Dashboard: '#1a1a1a' };
+  const colors = { Posts: '#2196F3', Users: '#4CAF50', Todos: '#FF9800', Server: '#9C27B0', Saved: '#5E35B1', Dashboard: '#1a1a1a', CIM400: '#0B74B8' };
   const color = colors[label] || '#666';
   return (
     <View style={[styles.tabIcon, focused && { backgroundColor: color }]}>
@@ -183,6 +184,13 @@ export default function App() {
           component={DashboardScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon label="Dashboard" focused={focused} />,
+          }}
+        />
+        <Tab.Screen
+          name="CIM400"
+          component={Cim400Screen}
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon label="CIM400" focused={focused} />,
           }}
         />
       </Tab.Navigator>
