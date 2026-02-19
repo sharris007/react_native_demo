@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FerrariSpeedometerGauge from '../components/FerrariSpeedometerGauge';
+import FordLogoBadge from '../components/FordLogoBadge';
 import MetricCard from '../components/MetricCard';
 import RevenueChart from '../components/RevenueChart';
 import SpeedometerGauge from '../components/SpeedometerGauge';
@@ -39,6 +40,9 @@ export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const gaugeSize = Math.max(118, Math.min(160, (width - 32 - 20 - 12) / 2));
+  const fordLogoSize = Math.max(54, Math.min(74, gaugeSize * 0.44));
+  const fordLogoTopOffset = gaugeSize * 0.33;
+  const fordLogoRightOffset = -Math.max(8, gaugeSize * 0.09);
 
   return (
     <ScrollView
@@ -113,7 +117,18 @@ export default function DashboardScreen() {
             />
           </View>
           <View style={[styles.gaugeSlot, styles.rightGaugeSlot]}>
-            <FerrariSpeedometerGauge value={146} min={0} max={200} size={gaugeSize} label="Ferrari" />
+            <View style={styles.ferrariGaugeWrap}>
+              <FerrariSpeedometerGauge value={146} min={0} max={200} size={gaugeSize} label="Ferrari" />
+              <View
+                pointerEvents="none"
+                style={[
+                  styles.fordLogoWrap,
+                  { top: fordLogoTopOffset, right: fordLogoRightOffset },
+                ]}
+              >
+                <FordLogoBadge width={fordLogoSize} />
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -214,16 +229,27 @@ const styles = StyleSheet.create({
   },
   speedometerRow: {
     flexDirection: 'row',
+    overflow: 'visible',
   },
   gaugeSlot: {
     flex: 1,
     alignItems: 'center',
+    overflow: 'visible',
   },
   leftGaugeSlot: {
     marginRight: 6,
   },
   rightGaugeSlot: {
     marginLeft: 6,
+  },
+  ferrariGaugeWrap: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  fordLogoWrap: {
+    position: 'absolute',
+    zIndex: 2,
   },
   revenueSection: {
     marginTop: 24,
