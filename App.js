@@ -14,6 +14,7 @@ import ServerItemDetailScreen from './src/screens/ServerItemDetailScreen';
 import SavedScreen from './src/screens/SavedScreen';
 import SavedDetailScreen from './src/screens/SavedDetailScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
+import ChamberScreen from './src/screens/ChamberScreen';
 
 const Tab = createBottomTabNavigator();
 const PostsStack = createNativeStackNavigator();
@@ -114,7 +115,15 @@ function SavedStackNavigator() {
 }
 
 function TabIcon({ label, focused }) {
-  const colors = { Posts: '#2196F3', Users: '#4CAF50', Todos: '#FF9800', Server: '#9C27B0', Saved: '#5E35B1', Dashboard: '#1a1a1a' };
+  const colors = {
+    Posts: '#2196F3',
+    Users: '#4CAF50',
+    Todos: '#FF9800',
+    Server: '#9C27B0',
+    Saved: '#5E35B1',
+    Dashboard: '#1a1a1a',
+    Chamber: '#1E4F79',
+  };
   const color = colors[label] || '#666';
   return (
     <View style={[styles.tabIcon, focused && { backgroundColor: color }]}>
@@ -183,6 +192,13 @@ export default function App() {
           component={DashboardScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon label="Dashboard" focused={focused} />,
+          }}
+        />
+        <Tab.Screen
+          name="Chamber"
+          component={ChamberScreen}
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon label="Chamber" focused={focused} />,
           }}
         />
       </Tab.Navigator>
