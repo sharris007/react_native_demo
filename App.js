@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import PostsScreen from './src/screens/PostsScreen';
 import PostDetailScreen from './src/screens/PostDetailScreen';
@@ -14,6 +14,7 @@ import ServerItemDetailScreen from './src/screens/ServerItemDetailScreen';
 import SavedScreen from './src/screens/SavedScreen';
 import SavedDetailScreen from './src/screens/SavedDetailScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
+import ChamberScreen from './src/screens/ChamberScreen';
 
 const Tab = createBottomTabNavigator();
 const PostsStack = createNativeStackNavigator();
@@ -114,7 +115,15 @@ function SavedStackNavigator() {
 }
 
 function TabIcon({ label, focused }) {
-  const colors = { Posts: '#2196F3', Users: '#4CAF50', Todos: '#FF9800', Server: '#9C27B0', Saved: '#5E35B1', Dashboard: '#1a1a1a' };
+  const colors = {
+    Posts: '#2196F3',
+    Users: '#4CAF50',
+    Todos: '#FF9800',
+    Server: '#9C27B0',
+    Saved: '#5E35B1',
+    Dashboard: '#1a1a1a',
+    Chamber: '#1E4F79',
+  };
   const color = colors[label] || '#666';
   return (
     <View style={[styles.tabIcon, focused && { backgroundColor: color }]}>
@@ -125,18 +134,81 @@ function TabIcon({ label, focused }) {
   );
 }
 
+function ScrollableTabBar({ state, descriptors, navigation, insets }) {
+  const bottomInset = Math.max(insets?.bottom ?? 0, 8);
+
+  return (
+    <View style={[styles.scrollableTabBar, { paddingBottom: bottomInset }]}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollableTabContent}
+      >
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const isFocused = state.index === index;
+          const activeTintColor = options.tabBarActiveTintColor ?? '#2196F3';
+          const inactiveTintColor = options.tabBarInactiveTintColor ?? '#999';
+          const color = isFocused ? activeTintColor : inactiveTintColor;
+
+          const label =
+            typeof options.tabBarLabel === 'string'
+              ? options.tabBarLabel
+              : typeof options.title === 'string'
+              ? options.title
+              : route.name;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name, route.params);
+            }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+
+          return (
+            <Pressable
+              key={route.key}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarButtonTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={styles.scrollableTabItem}
+            >
+              {options.tabBarIcon?.({ focused: isFocused, color, size: 24 })}
+              <Text style={[styles.scrollableTabLabel, { color }]}>{label}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
 export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="light" />
       <Tab.Navigator
+        tabBar={(props) => <ScrollableTabBar {...props} />}
         screenOptions={{
           headerShown: false,
-          tabBarShowLabel: true,
+          tabBarShowLabel: false,
           tabBarActiveTintColor: '#2196F3',
           tabBarInactiveTintColor: '#999',
-          tabBarStyle: styles.tabBar,
-          tabBarLabelStyle: styles.tabBarLabel,
         }}
       >
         <Tab.Screen
@@ -185,20 +257,38 @@ export default function App() {
             tabBarIcon: ({ focused }) => <TabIcon label="Dashboard" focused={focused} />,
           }}
         />
+        <Tab.Screen
+          name="Chamber"
+          component={ChamberScreen}
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon label="Chamber" focused={focused} />,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  tabBar: {
+  scrollableTabBar: {
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#eee',
     paddingTop: 8,
-    height: 64,
+    minHeight: 64,
   },
-  tabBarLabel: {
+  scrollableTabContent: {
+    paddingHorizontal: 4,
+    alignItems: 'center',
+  },
+  scrollableTabItem: {
+    minWidth: 86,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scrollableTabLabel: {
+    marginTop: 4,
     fontSize: 12,
     fontWeight: '500',
   },
