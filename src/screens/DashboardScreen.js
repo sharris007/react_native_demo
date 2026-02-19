@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MetricCard from '../components/MetricCard';
 import RevenueChart from '../components/RevenueChart';
+import SpeedometerGauge from '../components/SpeedometerGauge';
 
 const COLORS = {
   dark: '#1a1a1a',
@@ -30,6 +31,7 @@ const METRICS = [
 ];
 
 const PERIODS = ['Monthly', 'Weekly', 'Today'];
+const DASHBOARD_SPEED = 72;
 
 export default function DashboardScreen() {
   const [period, setPeriod] = useState('Weekly');
@@ -120,6 +122,21 @@ export default function DashboardScreen() {
           <RevenueChart />
         </View>
       </View>
+
+      {/* Speedometer section */}
+      <View style={styles.speedometerSection}>
+        <Text style={styles.speedometerTitle}>Speedometer</Text>
+        <View style={styles.speedometerCard}>
+          <SpeedometerGauge
+            value={DASHBOARD_SPEED}
+            min={0}
+            max={100}
+            unit="%"
+            label="DASHBOARD SPEED"
+            size={190}
+          />
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -202,6 +219,32 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  speedometerSection: {
+    marginTop: 24,
+  },
+  speedometerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#212121',
+    marginBottom: 12,
+  },
+  speedometerCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
