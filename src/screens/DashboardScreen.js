@@ -32,6 +32,7 @@ const METRICS = [
 
 const PERIODS = ['Monthly', 'Weekly', 'Today'];
 const DASHBOARD_SPEED = 72;
+const FERRARI_SPEED = 248;
 
 export default function DashboardScreen() {
   const [period, setPeriod] = useState('Weekly');
@@ -127,14 +128,29 @@ export default function DashboardScreen() {
       <View style={styles.speedometerSection}>
         <Text style={styles.speedometerTitle}>Speedometer</Text>
         <View style={styles.speedometerCard}>
-          <SpeedometerGauge
-            value={DASHBOARD_SPEED}
-            min={0}
-            max={100}
-            unit="%"
-            label="DASHBOARD SPEED"
-            size={190}
-          />
+          <View style={styles.speedometerRow}>
+            <View style={styles.speedometerGaugeSlot}>
+              <SpeedometerGauge
+                value={DASHBOARD_SPEED}
+                min={0}
+                max={100}
+                unit="%"
+                label="DASHBOARD SPEED"
+                size={150}
+              />
+            </View>
+            <View style={styles.speedometerGaugeSlot}>
+              <SpeedometerGauge
+                value={FERRARI_SPEED}
+                min={0}
+                max={340}
+                unit=" km/h"
+                label="FERRARI SPEED"
+                size={150}
+                variant="ferrari"
+              />
+            </View>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -244,7 +260,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 12,
     paddingVertical: 16,
-    alignItems: 'center',
+    paddingHorizontal: 8,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -256,5 +272,13 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
+  },
+  speedometerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  speedometerGaugeSlot: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
