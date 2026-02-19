@@ -27,6 +27,7 @@ import SavedDetailScreen from './src/screens/SavedDetailScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import ChamberScreen from './src/screens/ChamberScreen';
 import DavidScreen from './src/screens/DavidScreen';
+import DavidTwoScreen from './src/screens/DavidTwoScreen';
 
 const Tab = createBottomTabNavigator();
 const PostsStack = createNativeStackNavigator();
@@ -136,6 +137,7 @@ function TabIcon({ label, focused }) {
     Dashboard: '#1a1a1a',
     Chamber: '#1F5E91',
     David: '#1D6AA7',
+    'David two': '#0D8D7C',
   };
   const color = colors[label] || '#666';
   return (
@@ -443,6 +445,13 @@ export default function App() {
             component={DavidScreen}
             options={{
               tabBarIcon: ({ focused }) => <TabIcon label="David" focused={focused} />,
+            }}
+          />
+          <Tab.Screen
+            name="David two"
+            component={DavidTwoScreen}
+            options={{
+              tabBarIcon: ({ focused }) => <TabIcon label="David two" focused={focused} />,
             }}
           />
         </Tab.Navigator>
