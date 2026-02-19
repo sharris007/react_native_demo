@@ -222,7 +222,6 @@ const styles = StyleSheet.create({
   },
   hero: {
     flex: 1,
-    minHeight: 530,
   },
   heroImage: {
     resizeMode: 'cover',
@@ -231,8 +230,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(20, 30, 45, 0.32)',
     paddingHorizontal: 16,
-    paddingTop: 114,
-    paddingBottom: 72,
+    paddingTop: 92,
+    paddingBottom: 38,
     justifyContent: 'space-between',
   },
   heroTextWrap: {
@@ -240,16 +239,16 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     color: '#ffffff',
-    fontSize: 58,
-    lineHeight: 60,
+    fontSize: 44,
+    lineHeight: 48,
     fontWeight: '500',
-    marginBottom: 24,
+    marginBottom: 16,
     letterSpacing: 0.2,
   },
   heroSubtitle: {
     color: '#ffffff',
-    fontSize: 52,
-    lineHeight: 56,
+    fontSize: 30,
+    lineHeight: 34,
     fontWeight: '400',
   },
   actionsColumn: {
@@ -259,7 +258,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     width: 206,
-    paddingVertical: 16,
+    paddingVertical: 14,
     borderRadius: 10,
     borderWidth: 3,
     borderColor: '#c8deef',
@@ -269,8 +268,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 22,
-    lineHeight: 28,
+    fontSize: 20,
+    lineHeight: 26,
     fontWeight: '500',
     textDecorationLine: 'underline',
   },
