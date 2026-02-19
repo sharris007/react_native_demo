@@ -40,7 +40,13 @@ export default function DashboardScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={[styles.content, { paddingTop: 16 + insets.top }]}
+      contentContainerStyle={[
+        styles.content,
+        {
+          paddingTop: 16 + insets.top,
+          paddingBottom: 96 + insets.bottom,
+        },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       {/* Header */}
@@ -123,7 +129,7 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* Speedometer section */}
+      {/* Speedometer section (last item on dashboard) */}
       <View style={styles.speedometerSection}>
         <Text style={styles.speedometerTitle}>Speedometer</Text>
         <View style={styles.speedometerCard}>
@@ -148,7 +154,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    paddingBottom: 24,
   },
   header: {
     flexDirection: 'row',
@@ -233,6 +238,7 @@ const styles = StyleSheet.create({
   },
   speedometerSection: {
     marginTop: 24,
+    marginBottom: 8,
   },
   speedometerTitle: {
     fontSize: 18,
