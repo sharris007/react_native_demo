@@ -14,6 +14,7 @@ import ServerItemDetailScreen from './src/screens/ServerItemDetailScreen';
 import SavedScreen from './src/screens/SavedScreen';
 import SavedDetailScreen from './src/screens/SavedDetailScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
+import MikeTheGlazerScreen from './src/screens/MikeTheGlazerScreen';
 
 const Tab = createBottomTabNavigator();
 const PostsStack = createNativeStackNavigator();
@@ -114,7 +115,15 @@ function SavedStackNavigator() {
 }
 
 function TabIcon({ label, focused }) {
-  const colors = { Posts: '#2196F3', Users: '#4CAF50', Todos: '#FF9800', Server: '#9C27B0', Saved: '#5E35B1', Dashboard: '#1a1a1a' };
+  const colors = {
+    Posts: '#2196F3',
+    Users: '#4CAF50',
+    Todos: '#FF9800',
+    Server: '#9C27B0',
+    Saved: '#5E35B1',
+    Dashboard: '#1a1a1a',
+    'Mike the Glazer': '#fcb900',
+  };
   const color = colors[label] || '#666';
   return (
     <View style={[styles.tabIcon, focused && { backgroundColor: color }]}>
@@ -183,6 +192,18 @@ export default function App() {
           component={DashboardScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon label="Dashboard" focused={focused} />,
+          }}
+        />
+        <Tab.Screen
+          name="MikeTheGlazer"
+          component={MikeTheGlazerScreen}
+          options={{
+            title: 'Mike the Glazer',
+            tabBarLabel: 'Mike the Glazer',
+            tabBarActiveTintColor: '#fcb900',
+            tabBarIcon: ({ focused }) => (
+              <TabIcon label="Mike the Glazer" focused={focused} />
+            ),
           }}
         />
       </Tab.Navigator>
